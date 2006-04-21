@@ -17,5 +17,18 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/util"/>
 	<classpathentry kind="var" path="MAVEN_REPO/xerces/jars/xercesImpl-2.6.2.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jsf"/>
+	<classpathentry kind="src" path="/entity-api"/>
+	<classpathentry kind="src" path="/event-api"/>
+	<classpathentry kind="src" path="/component-api"/>
+	<classpathentry kind="src" path="/user-api"/>
+	<classpathentry kind="src" path="/email-api"/>
+	<classpathentry kind="src" path="/email-impl"/>
+	<classpathentry kind="src" path="/archive-api"/>
+	<classpathentry kind="var" path="MAVEN_REPO/commons-logging/jars/commons-logging-1.0.4.jar"/>
+	<classpathentry kind="src" path="/content-api"/>
+	<classpathentry kind="src" path="/site-api"/>
+	<classpathentry kind="src" path="/authz-api"/>
+	<classpathentry kind="src" path="/alias-api"/>
+	<classpathentry kind="src" path="/tool-api"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
