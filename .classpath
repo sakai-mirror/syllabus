@@ -2,8 +2,9 @@
 <classpath>
 	<classpathentry sourcepath="JRE_SRC" kind="var" path="JRE_LIB"/>
 	<classpathentry kind="src" path="syllabus-api/src/java"/>
+	<classpathentry kind="src" path="syllabus-hbm/src/java"/>
+	<classpathentry kind="src" path="syllabus-impl/src/java"/>
 	<classpathentry kind="src" path="syllabus-app/src/java"/>
-	<classpathentry kind="src" path="syllabus-comp-shared/src/java"/>
 	<classpathentry kind="var" path="MAVEN_REPO/jsf/jars/jsf-impl-1.1.01.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/jsf/jars/jsf-api-1.1.01.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/commons-fileupload/jars/commons-fileupload-1.0.jar"/>
