@@ -1,0 +1,13 @@
+Skipped:
+
+Revision: 13031
+Author: cwen@iupui.edu
+Date: 3:22:15 PM, Thursday, July 27, 2006
+Message:
+SAK-5757
+http://bugs.sakaiproject.org/jira/browse/SAK-5757
+ syllabus security
+----
+Added : /syllabus/trunk/README_permissionChange.txt
+Modified : /syllabus/trunk/syllabus-api/src/java/org/sakaiproject/api/app/syllabus/SyllabusService.java
+Modified : /syllabus/trunk/syllabus-impl/src/java/org/sakaiproject/component/app/syllabus/SyllabusServiceImpl.java
