@@ -107,7 +107,6 @@ public class SyllabusServiceImpl implements SyllabusService, EntityTransferrer
 //sakai2 -- add init and destroy methods  
 	public void init()
 	{
-		EntityManager.registerEntityProducer(this, REFERENCE_ROOT);
 	  
 	  m_relativeAccessPoint = REFERENCE_ROOT;
 	  
@@ -123,6 +122,8 @@ public class SyllabusServiceImpl implements SyllabusService, EntityTransferrer
 	  edit.setResourceFilter(getAccessPoint(true));
 	  
 	  edit.setAction(new SiteEmailNotificationSyllabus());
+
+	  EntityManager.registerEntityProducer(this, REFERENCE_ROOT);	
 	}
 
 	public void destroy()

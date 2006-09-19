@@ -1,6 +1,6 @@
 /**********************************************************************************
- * $URL: https://source.sakaiproject.org/svn/syllabus/trunk/syllabus-impl/src/java/org/sakaiproject/component/app/syllabus/SiteEmailNotificationSyllabus.java $
- * $Id: SiteEmailNotificationSyllabus.java 8122 2006-05-01 15:02:42Z cwen@iupui.edu $
+ * $URL$
+ * $Id$
  ***********************************************************************************
  *
  * Copyright (c) 2003, 2004, 2005, 2006 The Sakai Foundation.
@@ -22,12 +22,15 @@ package org.sakaiproject.component.app.syllabus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.ResourceBundle;
 
 import org.sakaiproject.api.app.syllabus.SyllabusData;
 import org.sakaiproject.api.app.syllabus.SyllabusItem;
 import org.sakaiproject.api.app.syllabus.SyllabusManager;
 import org.sakaiproject.api.app.syllabus.SyllabusService;
+import org.sakaiproject.user.cover.UserDirectoryService;
 import org.sakaiproject.component.cover.ComponentManager;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.entity.api.Reference;
@@ -218,4 +221,35 @@ public class SiteEmailNotificationSyllabus extends SiteEmailNotification
 				+ rb.getString("forthe") + " " + title + " " + rb.getString("site") + newline + rb.getString("youcan") + newline;
 		return rv;
 	}
+
+	protected void addSpecialRecipients(List users, Reference ref)
+	{
+	  //for SiteEmailNotification.getRecipients method doesn't get syllabus' recipients. 
+	  //List users = SecurityService.unlockUsers(ability, ref.getReference()); doesn't get users for the site because of permission messing
+	  //need add syllabus permission later
+		try
+		{
+			String siteId = (getSite() != null) ? getSite() : ref.getContext();	
+			Site site = SiteService.getSite(siteId);
+			Set activeUsersIdSet = site.getUsers();
+			List activeUsersIdList = new Vector();
+//			List activeUserList = new Vector();
+			Iterator iter = activeUsersIdSet.iterator();
+			while(iter.hasNext())
+			{
+				activeUsersIdList.add((String)iter.next());
+			}
+
+			List activeUserList = UserDirectoryService.getUsers(activeUsersIdList);
+			activeUserList.removeAll(users);
+			for(int i=0; i<activeUserList.size(); i++)
+			{
+				users.add(activeUserList.get(i));
+			}
+		}
+		catch(Exception e)
+		{
+		}
+	}
+
 }
