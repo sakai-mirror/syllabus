@@ -232,7 +232,7 @@ public class SiteEmailNotificationSyllabus extends SiteEmailNotification
 			String siteId = (getSite() != null) ? getSite() : ref.getContext();	
 			Site site = SiteService.getSite(siteId);
 			Set activeUsersIdSet = site.getUsers();
-			List activeUsersIdList = new Vector();
+			List activeUsersIdList = new ArrayList(activeUsersIdSet.size());
 //			List activeUserList = new Vector();
 			Iterator iter = activeUsersIdSet.iterator();
 			while(iter.hasNext())
@@ -249,6 +249,7 @@ public class SiteEmailNotificationSyllabus extends SiteEmailNotification
 		}
 		catch(Exception e)
 		{
+			System.out.println(e); // TODO need a logger
 		}
 	}
 
