@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry sourcepath="JRE_SRC" kind="var" path="JRE_LIB"/>
+	<classpathentry kind="var" path="JRE_LIB" sourcepath="JRE_SRC"/>
 	<classpathentry kind="src" path="syllabus-api/src/java"/>
 	<classpathentry kind="src" path="syllabus-hbm/src/java"/>
 	<classpathentry kind="src" path="syllabus-impl/src/java"/>
@@ -9,7 +9,6 @@
 	<classpathentry kind="var" path="MAVEN_REPO/jsf/jars/jsf-api-1.1.01.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/commons-fileupload/jars/commons-fileupload-1.0.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/org.hibernate/jars/hibernate-3.1.3.jar"/>
-	<classpathentry kind="var" path="MAVEN_REPO/xerces/jars/xercesImpl-2.6.2.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jsf"/>
 	<classpathentry kind="src" path="/entity-api"/>
 	<classpathentry kind="src" path="/event-api"/>
