@@ -218,10 +218,6 @@ public class SyllabusTool
   
   private String currentRediredUrl = null;
   
-  private final String httpPrefix = "http://";
-  
-  private final String httpsPrefix = "https://";
-  
   public SyllabusTool()
   {
   }
@@ -1795,39 +1791,17 @@ public class SyllabusTool
 
   /**
    * @return
-   * 	String url if using an external url 
-   * 	If not included, also add http:// or https:// prefix.
+   * 	String url if using an external url or
+   * 	'#' so current page appears in new window
    */
   public String getPrintFriendlyUrl()
   {
-	  try {
-		  currentRediredUrl = getSyllabusItem().getRedirectURL();
-		  if (currentRediredUrl != null && !"".equals(currentRediredUrl)) {
-			  if (currentRediredUrl.indexOf(httpPrefix) == -1 && currentRediredUrl.indexOf(httpsPrefix) == -1 ) {
-				  if (ServerConfigurationService.getToolUrl().indexOf(httpsPrefix) != -1) {
-					  return httpsPrefix + currentRediredUrl; 
-				  }
-				  else
-					  return httpPrefix + currentRediredUrl;
-			  }
-			  return currentRediredUrl;
-		  }
-		  else {
-			  return ServerConfigurationService.getToolUrl() + Entity.SEPARATOR
+	  if (currentRediredUrl != null && !"".equals(currentRediredUrl)) {
+		  return currentRediredUrl;
+	  }
+	  else {
+		  return ServerConfigurationService.getToolUrl() + Entity.SEPARATOR
 					+ ToolManager.getCurrentPlacement().getId() + Entity.SEPARATOR + "printFriendly";
-		  }
 	  }
-	  catch (PermissionException e) {
-	        logger.info(this + ".getRediredUrl() in SyllabusTool " + e);
-	        FacesContext.getCurrentInstance().addMessage(
-	            null,
-	            MessageFactory.getMessage(FacesContext.getCurrentInstance(),
-	                "error_permission", (new Object[] { e.toString() })));		  
-	  }
-	  // If here, we have a permission error getting redirected syllabus,
-	  // so just return printFriendly url
-	  return ServerConfigurationService.getToolUrl() + Entity.SEPARATOR
-		+ ToolManager.getCurrentPlacement().getId() + Entity.SEPARATOR + "printFriendly";
-
   }
 }

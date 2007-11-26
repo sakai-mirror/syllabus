@@ -13,11 +13,14 @@
 	<sakai:view_content>
 
 <script language="JavaScript">
-	// if redirected, just open in another window else
-	// open with size approx what actual print out will look like
-	function printFriendly(url) {
-		if (url.indexOf("printFriendly") == -1) {
-			window.open(url,"mywindow");
+	// open print preview in another browser window so can size approx what actual
+	// print out will look like
+	function printFriendly(url, redirectURL) {
+		if ("" != redirectURL) {
+			if (redirectURL.indexOf("http://") == -1)
+				redirectURL = "http://" + redirectURL;
+			
+			window.open(redirectURL,"mywindow");
 		}
 		else {
 			window.open(url,"mywindow","width=960,height=1100,scrollbars=yes"); 
@@ -37,12 +40,12 @@
 			    		action="#{SyllabusTool.processCreateAndEdit}"
 						value="#{msgs.bar_create_edit}" />
 					<f:verbatim><h:outputText value=" " /><h:outputText value=" " /></f:verbatim>
-					<h:outputLink id="print" value="javascript:printFriendly('#{SyllabusTool.printFriendlyUrl}');">
+					<h:outputLink id="print" value="javascript:printFriendly('#{SyllabusTool.printFriendlyUrl}', '#{SyllabusTool.syllabusItem.redirectURL}');">
 						<h:graphicImage url="/images/printer.png" alt="#{msgs.print_friendly}" title="#{msgs.print_friendly}" />
 					</h:outputLink>
 				</syllabus:syllabus_ifnot>
 				<syllabus:syllabus_if test="#{SyllabusTool.editAble}" >
-					<h:outputLink id="printIcon" value="javascript:printFriendly('#{SyllabusTool.printFriendlyUrl}');">
+					<h:outputLink id="printIcon" value="javascript:printFriendly('#{SyllabusTool.printFriendlyUrl}', '#{SyllabusTool.syllabusItem.redirectURL}');">
 						<h:graphicImage url="/images/printer.png" alt="#{msgs.print_friendly}" title="#{msgs.print_friendly}" />
 					</h:outputLink>
 				</syllabus:syllabus_if>
