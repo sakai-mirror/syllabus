@@ -2,7 +2,6 @@
   <name>sakai-syllabus-impl</name>
   <comment/>
   <projects>
-    <project>sakai-archive-api</project>
     <project>sakai-syllabus-api</project>
     <project>sakai-syllabus-hbm</project>
   </projects>
