@@ -321,10 +321,40 @@ public class SyllabusManagerImpl extends HibernateDaoSupport implements Syllabus
         return null;
       }
     }; 
-    getHibernateTemplate().execute(hcb);    
+    getHibernateTemplate().execute(hcb);
+    updateSyllabusAttachmentsViewState(syllabusData);
   }  
-  
-  
+
+  /**
+   * Make sure all attachments associated with a syllabus
+   * are marked by the Content Hosting Service with appropriate
+   * public (true/false) permissions.
+   * 
+   * @param syllabusData the SyllabusData object to check for publicness
+   */
+  private void updateSyllabusAttachmentsViewState(final SyllabusData syllabusData)
+  {
+	boolean publicView = "yes".equalsIgnoreCase(syllabusData.getView());
+    Set<?> attachments = syllabusData.getAttachments();
+    for (Object a: attachments) {
+    	SyllabusAttachment attach = (SyllabusAttachment)a;
+    	ContentHostingService.setPubView(attach.getAttachmentId(), publicView);
+    }
+  }
+
+  /**
+   * Make sure this attachmentis marked by the Content Hosting Service
+   * with the appropriate public (true/false) permissions.
+   * 
+   * @param syllabusData the SyllabusData object to check for publicness
+   * @param attach the SyllabusAttachment object to update
+   */
+  private void updateSyllabusAttachmentViewState(final SyllabusData syllabusData, final SyllabusAttachment attach)
+  {
+	boolean publicView = "yes".equalsIgnoreCase(syllabusData.getView());
+    ContentHostingService.setPubView(attach.getAttachmentId(), publicView);
+  }
+
   /**
    * removeSyllabusToSyllabusItem loads many side of the relationship
    * @param syllabusItem
@@ -371,6 +401,7 @@ public class SyllabusManagerImpl extends HibernateDaoSupport implements Syllabus
   public void saveSyllabus(SyllabusData data)
   {
     getHibernateTemplate().saveOrUpdate(data);
+    updateSyllabusAttachmentsViewState(data);
   }  
 
   public SyllabusData getSyllabusData(final String dataId)
@@ -470,6 +501,7 @@ public class SyllabusManagerImpl extends HibernateDaoSupport implements Syllabus
       }
     }; 
     getHibernateTemplate().execute(hcb);
+    updateSyllabusAttachmentViewState(syllabusData, syllabusAttach);
   }  
 
 
