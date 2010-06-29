@@ -1309,9 +1309,9 @@ public class SyllabusServiceImpl implements SyllabusService, EntityTransferrer
 							ContentResource oldAttachment = ContentHostingService.getResource(thisAttach.getAttachmentId());
 							ContentResource attachment = ContentHostingService.addAttachmentResource(
 								oldAttachment.getProperties().getProperty(
-										ResourceProperties.PROP_DISPLAY_NAME), ToolManager
-										.getCurrentPlacement().getContext(), ToolManager.getTool(
-										"sakai.syllabus").getTitle(), oldAttachment.getContentType(),
+										ResourceProperties.PROP_DISPLAY_NAME), 
+										toContext, 
+										ToolManager.getTool("sakai.syllabus").getTitle(), oldAttachment.getContentType(),
 										oldAttachment.getContent(), oldAttachment.getProperties());
 							SyllabusAttachment thisSyllabusAttach = syllabusManager.createSyllabusAttachmentObject(
 								attachment.getId(), 
