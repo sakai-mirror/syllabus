@@ -53,6 +53,7 @@ import org.sakaiproject.site.cover.SiteService;
 import org.sakaiproject.tool.api.Placement;
 import org.sakaiproject.tool.api.ToolSession;
 import org.sakaiproject.tool.cover.SessionManager;
+import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.cover.ToolManager;
 import org.sakaiproject.user.cover.UserDirectoryService;
 import org.sakaiproject.util.FormattedText;
@@ -244,8 +245,21 @@ public class SyllabusTool
 	  this.alertMessage = alertMessage;
   }
 
+  protected boolean wirelessDevice = false;
+  
+  public boolean getWirelessDevice()
+  {
+  	return wirelessDevice;
+  }
+  
   public SyllabusTool()
   {
+	  Session session = SessionManager.getCurrentSession();
+	  Object c = session.getAttribute("is_wireless_device");
+	  if (c != null)
+	  {
+		  wirelessDevice = ((Boolean) c).booleanValue();
+	  }
   }
 
   public boolean getdisplayNoEntryMsg()
