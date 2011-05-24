@@ -13,7 +13,7 @@
 				<h3>
 					<h:outputText value="#{msgs.redirect_sylla}" />
 				</h3>
-				<h:panelGrid styleClass="jsfFormTable" columns="1" summary="layout">
+				<h:panelGrid styleClass="jsfFormTable" columns="1">
 					<h:panelGroup styleClass="shorttext required">
 						<h:outputText value="*" styleClass="reqStar"/>
 						<h:outputLabel for="urlValue"><h:outputText value="#{msgs.syllabus_url}"/></h:outputLabel>
