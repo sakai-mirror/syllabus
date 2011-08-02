@@ -22,9 +22,11 @@ package org.sakaiproject.component.app.syllabus;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.Stack;
@@ -45,6 +47,7 @@ import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.Edit;
 import org.sakaiproject.entity.api.Entity;
 import org.sakaiproject.entity.api.EntityTransferrer;
+import org.sakaiproject.entity.api.EntityTransferrerRefMigrator;
 import org.sakaiproject.entity.api.HttpAccess;
 import org.sakaiproject.entity.api.Reference;
 import org.sakaiproject.entity.api.ResourceProperties;
@@ -84,7 +87,7 @@ import org.w3c.dom.NodeList;
  * @author rshastri TODO To change the template for this generated type comment go to Window -
  *         Preferences - Java - Code Style - Code Templates
  */
-public class SyllabusServiceImpl implements SyllabusService, EntityTransferrer
+public class SyllabusServiceImpl implements SyllabusService, EntityTransferrer, EntityTransferrerRefMigrator
 {
   private static final String SYLLABUS = "syllabus";
   private static final String SYLLABUS_ID = "id";
@@ -1161,11 +1164,18 @@ public class SyllabusServiceImpl implements SyllabusService, EntityTransferrer
 		return toolIds;
 	}
 
-	public void transferCopyEntities(String fromContext, String toContext, List ids) 
+	public void transferCopyEntities(String fromContext, String toContext, List ids){
+		transferCopyEntitiesRefMigrator(fromContext, toContext, ids);
+	}
+
+
+	public Map<String, String> transferCopyEntitiesRefMigrator(String fromContext, String toContext, List<String> ids) 
 	{
+		Map<String, String> transversalMap = new HashMap<String, String>();
+		
 		try 
 		{
-			logger.debug("transer copy syllbus itmes by transferCopyEntities");
+			logger.debug("transfer copy syllbus itmes by transferCopyEntitiesRefMigrator");
 			String fromPage = fromContext;
 			SyllabusItem fromSyllabusItem = syllabusManager
 					.getSyllabusItemByContextId(fromPage);
@@ -1241,6 +1251,8 @@ public class SyllabusServiceImpl implements SyllabusService, EntityTransferrer
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
 		}
+		
+		return transversalMap;
 	}
 
 	public void readSyllabus(SyllabusData data)
@@ -1320,8 +1332,14 @@ public class SyllabusServiceImpl implements SyllabusService, EntityTransferrer
 		return SecurityService.unlock(lock, reference);
 	}
 	
-	public void transferCopyEntities(String fromContext, String toContext, List ids, boolean cleanup)
+	public void transferCopyEntities(String fromContext, String toContext, List ids, boolean cleanup){
+		transferCopyEntitiesRefMigrator(fromContext, toContext, ids, cleanup);
+	}
+
+
+	public Map<String, String> transferCopyEntitiesRefMigrator(String fromContext, String toContext, List<String> ids, boolean cleanup)
 	{	
+		Map<String, String> transversalMap = new HashMap<String, String>();
 		try
 		{
 			if(cleanup == true)
@@ -1347,8 +1365,59 @@ public class SyllabusServiceImpl implements SyllabusService, EntityTransferrer
 		}
 		catch (Exception e)
 		{
-			logger.debug("Syllabus transferCopyEntities failed" + e);
+			logger.debug("Syllabus transferCopyEntitiesRefMigrator failed" + e);
 		}
-		transferCopyEntities(fromContext, toContext, ids);
+		transversalMap.putAll(transferCopyEntitiesRefMigrator(fromContext, toContext, ids));
+		
+		return transversalMap;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void updateEntityReferences(String toContext, Map<String, String> transversalMap){		  
+		if(transversalMap != null && transversalMap.size() > 0){
+			Set<Entry<String, String>> entrySet = (Set<Entry<String, String>>) transversalMap.entrySet();	  	
+
+			try
+			{				
+				String toSiteId = toContext;
+
+				SyllabusItem fromSyllabusItem = syllabusManager.getSyllabusItemByContextId(toSiteId);
+
+				if (fromSyllabusItem != null) 
+				{
+					Set fromSyDataSet = syllabusManager.getSyllabiForSyllabusItem(fromSyllabusItem);
+
+					Iterator fromSetIter = fromSyDataSet.iterator();
+
+					while (fromSetIter.hasNext()) 
+					{
+						SyllabusData fromSyllabusData = (SyllabusData) fromSetIter.next();
+
+
+						String msgBody = fromSyllabusData.getAsset();
+						boolean updated = false;
+						Iterator<Entry<String, String>> entryItr = entrySet.iterator();
+						while(entryItr.hasNext()) {
+							Entry<String, String> entry = (Entry<String, String>) entryItr.next();
+							String fromContextRef = entry.getKey();
+							if(msgBody.contains(fromContextRef)){									
+								msgBody = msgBody.replace(fromContextRef, entry.getValue());
+								updated = true;
+							}								
+						}	
+						if(updated){
+							fromSyllabusData.setAsset(msgBody);
+							syllabusManager.saveSyllabus(fromSyllabusData);
+						}
+					}
+				}				
+			}
+			catch (Exception e)
+			{
+				logger.debug("Syllabus updateEntityReferences failed" + e);
+			}
+		}		  		  		
 	}
 }
