@@ -36,9 +36,8 @@
 				<label for="" style="float:none;display:block"> <%-- outputLabel needed here instead but there is no target to id --%>
 					<h:outputText value="#{msgs.syllabus_content}"/>
 				</label>
-				<sakai:inputRichText textareaOnly="#{SyllabusTool.mobileSession}" rows="20" cols="120" id="syllabus_compose_read" value="#{SyllabusTool.syllabusDataAsset}">
-					<f:validateLength maximum="65000"/>
-				</sakai:inputRichText>
+				<sakai:inputRichText textareaOnly="#{SyllabusTool.mobileSession}" rows="20" cols="120" id="syllabus_compose_read" value="#{SyllabusTool.syllabusDataAsset}" />
+			    <h:outputText value="#{msgs.empty_content_validate} #{SyllabusTool.evilTagMsg}" styleClass="alertMessage"  rendered="#{SyllabusTool.displayEvilTagMsg}"/>
 			</p>	
 			<div class="checkbox">
 				<h:selectOneRadio value="#{SyllabusTool.syllabusDataView}"  layout="pageDirection" title="#{msgs.publicPrivate}">
@@ -67,9 +66,6 @@
 							value="#{msgs.add_attach}"/>
 					</sakai:button_bar>							
 	
-					<h:outputText value="" styleClass="alertMessage"  rendered="#{SyllabusTool.displayEvilTagMsg}"/>
-				    <h:outputText value="#{msgs.empty_content_validate} #{SyllabusTool.evilTagMsg}" styleClass="alertMessage"  rendered="#{SyllabusTool.displayEvilTagMsg}"/>
-
 					<syllabus:syllabus_table value="#{SyllabusTool.allAttachments}" var="eachAttach" summary="#{msgs.edit_att_list_summary}" styleClass="listHier lines nolines">
 					  <h:column rendered="#{!empty SyllabusTool.allAttachments}">
 							<f:facet name="header">
