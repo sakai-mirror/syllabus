@@ -183,6 +183,8 @@
 							<h:outputLabel for="linkCalendar">
 								<h:outputText value="#{msgs.linkcalendartitle}"/>
 							</h:outputLabel>
+							<h:outputText value="#{msgs.invalid_calendar}" styleClass="alertMessage" 
+									rendered="#{SyllabusTool.displayCalendarError}"/>
 						</h:panelGroup>
 					</h:panelGrid>
 					

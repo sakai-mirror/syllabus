@@ -355,6 +355,8 @@ public class SyllabusTool
   
   private boolean displayDateError=false;
   
+  private boolean displayCalendarError=false;
+  
   private boolean dontUpdateEntries = false;
   
   private String evilTagMsg=null;
@@ -860,8 +862,17 @@ public class SyllabusTool
           }else{
         	  //update item:
         	  boolean posted = SyllabusData.ITEM_POSTED.equals(den.getEntry().getStatus());
+        	  //make sure calendar settings are set correctly:
+        	  if(den.getEntry().getLinkCalendar()){
+        		  if(den.getEntry().getStartDate() == null && den.getEntry().getEndDate() == null){
+        			  //can't post to calendar if dates are null
+        			  den.getEntry().setLinkCalendar(false);
+        		  }else if(!posted){
+        			  //can't post to calendar if the item is in draft
+        			  den.getEntry().setLinkCalendar(false);
+        		  }
+        	  }
         	  boolean statusChanged = den.getStatusChanged();
-        	  
         	  //this will update the calendar if it's posted and inCalendar is selected
               syllabusManager.saveSyllabus(den.getEntry());
               if(posted && statusChanged){
@@ -926,6 +937,7 @@ public class SyllabusTool
     displayTitleErroMsg = false;
     displayEvilTagMsg=false;
     displayDateError=false;
+    displayCalendarError = false;
     entries.clear();
     entry = null;
     attachments.clear();
@@ -943,6 +955,7 @@ public class SyllabusTool
       displayTitleErroMsg = false;
       displayEvilTagMsg=false;
       displayDateError=false;
+      displayCalendarError = false;
       if (!this.checkAccess())
       {
         return "permission_error";
@@ -988,6 +1001,8 @@ public class SyllabusTool
         	displayDateError = true;
         	return "edit";
         }
+        //calendar can not be posted to when it's saved as a draft
+        entry.getEntry().setLinkCalendar(false);
         if (entry.justCreated == true)
         {
           syllabusManager.addSyllabusToSyllabusItem(syllabusItem, getEntry()
@@ -1171,6 +1186,7 @@ public class SyllabusTool
       displayTitleErroMsg = false;
       displayEvilTagMsg=false;
       displayDateError=false;
+      displayCalendarError = false;
       if (!this.checkAccess())
       {
         return "permission_error";
@@ -1214,6 +1230,10 @@ public class SyllabusTool
         		&& entry.getEntry().getEndDate() != null 
         		&& entry.getEntry().getStartDate().after(entry.getEntry().getEndDate())){
         	displayDateError = true;
+        	return "edit";
+        }
+        if(entry.getEntry().getLinkCalendar() && entry.getEntry().getStartDate() == null && entry.getEntry().getEndDate() == null){
+        	displayCalendarError = true;
         	return "edit";
         }
         if (entry.justCreated == true)
@@ -1445,6 +1465,7 @@ public class SyllabusTool
     displayTitleErroMsg = false;
     displayEvilTagMsg=false;
     displayDateError=false;
+    displayCalendarError = false;    		
     entries.clear();
     entry = null;
     attachments.clear();
@@ -1462,6 +1483,7 @@ public class SyllabusTool
       displayTitleErroMsg = false;
       displayEvilTagMsg=false;	
       displayDateError=false;
+      displayCalendarError = false;
       if (!this.checkAccess())
       {
         return "permission_error";
@@ -1508,6 +1530,8 @@ public class SyllabusTool
         	displayDateError = true;
         	return "edit";
         }
+        //calendar can not be posted to when its a draft
+        entry.getEntry().setLinkCalendar(false);
        if (entry.justCreated == false)
         {
           getEntry().getEntry().setStatus(SyllabusData.ITEM_DRAFT);
@@ -1558,6 +1582,7 @@ public class SyllabusTool
       displayTitleErroMsg = false;
       displayEvilTagMsg=false;	
       displayDateError=false;
+      displayCalendarError = false;
       if (!this.checkAccess())
       {
         return "permission_error";
@@ -1601,6 +1626,10 @@ public class SyllabusTool
         		&& entry.getEntry().getEndDate() != null 
         		&& entry.getEntry().getStartDate().after(entry.getEntry().getEndDate())){
         	displayDateError = true;
+        	return "read";
+        }
+        if(entry.getEntry().getLinkCalendar() && entry.getEntry().getStartDate() == null && entry.getEntry().getEndDate() == null){
+        	displayCalendarError = true;
         	return "read";
         }
         if (entry.justCreated == false)
@@ -1730,6 +1759,7 @@ public class SyllabusTool
 	displayTitleErroMsg = false;
     displayEvilTagMsg=false;
     displayDateError=false;
+    displayCalendarError = false;
     if(entry.getEntry().getTitle() == null)
     {
       displayTitleErroMsg = true;
@@ -1769,6 +1799,10 @@ public class SyllabusTool
     	displayDateError = true;
     	return "edit";
     }
+    if(entry.getEntry().getLinkCalendar() && entry.getEntry().getStartDate() == null && entry.getEntry().getEndDate() == null){
+    	displayCalendarError = true;
+    	return "edit";
+    }
     return "preview";
     
   }
@@ -1783,6 +1817,7 @@ public class SyllabusTool
 	displayTitleErroMsg = false;
     displayEvilTagMsg=false;  
     displayDateError=false;
+    displayCalendarError = false;
     if(entry.getEntry().getTitle() == null)
     {
       displayTitleErroMsg = true;
@@ -1820,6 +1855,10 @@ public class SyllabusTool
     		&& entry.getEntry().getEndDate() != null 
     		&& entry.getEntry().getStartDate().after(entry.getEntry().getEndDate())){
     	displayDateError = true;
+    	return "read";
+    }
+    if(entry.getEntry().getLinkCalendar() && entry.getEntry().getStartDate() == null && entry.getEntry().getEndDate() == null){
+    	displayCalendarError = true;
     	return "read";
     }
     return "read_preview";
@@ -3147,4 +3186,12 @@ public void setOpenDataId(String openDataId) {
     public void setOpenInNewWindow(boolean openInNewWindow) {
         this.openInNewWindow = openInNewWindow;
     }
+
+	public boolean isDisplayCalendarError() {
+		return displayCalendarError;
+	}
+
+	public void setDisplayCalendarError(boolean displayCalendarError) {
+		this.displayCalendarError = displayCalendarError;
+	}
 }
